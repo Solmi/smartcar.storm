@@ -20,14 +20,14 @@ public class SplitBolt extends BaseBasicBolt {
 	@Override
 	public void execute(Tuple tuple, BasicOutputCollector collector) {
 
-		String tValue = tuple.getString(0);  
-		String[] receiveData = tValue.split("\\,");
+		String tValue = tuple.getString(0);  // 정보 한줄
+		String[] receiveData = tValue.split("\\,"); // 쉼표기준으로 잘라냄
 		
-		LOGGER.error(Arrays.toString(receiveData));
+		LOGGER.error(Arrays.toString(receiveData));	 //log 설정. 너무 많이 쏟아져서?
 		
 		//발생일시(14자리), 차량번호, 가속페달, 브레이크페달, 운전대회적각, 방향지시등, 주행속도, 주행지역
-		collector.emit( new Values( new StringBuffer( receiveData[0] ).reverse() + "-" + receiveData[1],
-									receiveData[0],
+		collector.emit( new Values( new StringBuffer( receiveData[0] ).reverse() + "-" + receiveData[1], // HBase에서 row-key로 사용하려고 작업
+									receiveData[0],	 // 여기서부터 칼럼
 									receiveData[1],
 									receiveData[2],
 									receiveData[3],

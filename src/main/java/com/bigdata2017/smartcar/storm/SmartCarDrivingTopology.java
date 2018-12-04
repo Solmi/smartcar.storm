@@ -46,10 +46,10 @@ public class SmartCarDrivingTopology {
 		spoutConf.scheme = new SchemeAsMultiScheme( new StringScheme() );
 		KafkaSpout kafkaSpout = new KafkaSpout( spoutConf );
 		
-		topologyBuilder.setSpout( "kafkaSpout", kafkaSpout, 1 );
+		topologyBuilder.setSpout( "kafkaSpout", kafkaSpout, 1 );  //topology 전체에 spout 셋팅해줌
 		
 		// Grouping [kafkaSpout -> splitBolt] 
-		topologyBuilder.setBolt( "splitBolt", new SplitBolt(), 1 ).allGrouping( "kafkaSpout" );
+		topologyBuilder.setBolt( "splitBolt", new SplitBolt(), 1 ).allGrouping( "kafkaSpout" ); // 연결작업이라고 생각하기
 		// Subgrouping [splitBolt -> hbaseBolt]
 		topologyBuilder.setBolt( "hbaseBolt", new HBaseBolt(), 1 ).shuffleGrouping( "splitBolt" );
 		
@@ -57,7 +57,7 @@ public class SmartCarDrivingTopology {
 		// Grouping [kafkaSpout -> esperBolt]
 		topologyBuilder.setBolt( "esperBolt", new EsperBolt(), 1 ).allGrouping( "kafkaSpout" );		
 		// Subgrouping [esperBolt -> redisBolt]
-		JedisPoolConfig jedisPoolConfig =
+		JedisPoolConfig jedisPoolConfig =		// redis 서버 정보 셋팅
 			new JedisPoolConfig.
 			Builder().
 			setHost( "lx2.hadoop.com" ).
